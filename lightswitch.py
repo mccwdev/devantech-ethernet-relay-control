@@ -1,17 +1,23 @@
 #
-# Module to control Devantech Ethernet Relay control
+# Lightswitch - Enable Relay to switch outside lights on after sunset
+#
+# - Uses Astral module to determine 'astral dusk' time on current location
+# - Enables Relay 1 (lights on) x minutes after 'astral dusk' time
+# - Disables Relay 1 (lights off) at a certain time
 #
 
-from datetime import datetime, timezone, timedelta
-from astral import Astral
+from datetime import datetime, timedelta
+from pytz import timezone
 import socket
+from astral import Astral
 
 
 LOCATION_CITY_NAME = 'Amsterdam'
+LOCATION_REGION = 'Europe'
 ERCONTROL_HOST = 'ds1242'
 ERCONTROL_PORT = 17123
 BUFFER_SIZE = 255
-SUN_DUSK_OFFSET_MINUTES = 0
+SUN_DUSK_OFFSET_MINUTES = -10
 ERCONTROL_COMMAND_ON = 'SR 1 on'.encode('utf8')
 ERCONTROL_COMMAND_OFF = 'SR 1 off'.encode('utf8')
 
@@ -40,12 +46,11 @@ if __name__ == '__main__':
     s = MySocket()
     s.connect(ERCONTROL_HOST, ERCONTROL_PORT)
     suninfo = get_current_suntimes(LOCATION_CITY_NAME)
-    now = datetime.now(timezone.utc)
-    d = datetime.now(timezone.utc).astimezone()
-    utc_offset = int((d.utcoffset() // timedelta(seconds=1)) / 3600)
-    endtime = now.replace(hour=23-utc_offset, minute=30, second=0, microsecond=0)
+    time_location_name = timezone('%s/%s' % (LOCATION_REGION, LOCATION_CITY_NAME))
+    now = datetime.now(time_location_name)
+    endtime = now.replace(hour=23, minute=30)
 
-    if suninfo['dusk'] < now and datetime.now(timezone.utc) < endtime:
+    if (suninfo['dusk'] + timedelta(minutes=SUN_DUSK_OFFSET_MINUTES)) < now < endtime:
         print("Enable Relay")
         s.sock.send(ERCONTROL_COMMAND_ON)
         data = s.sock.recv(BUFFER_SIZE)
