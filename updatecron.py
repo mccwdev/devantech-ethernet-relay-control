@@ -15,6 +15,8 @@ from astral import Astral
 LOCATION_CITY_NAME = 'Amsterdam'
 LOCATION_REGION = 'Europe'
 SUN_DUSK_OFFSET_MINUTES = -10
+CRON_USER = 'lennart'
+CURRENT_DIR = '/home/lennart/code/devantech-ethernet-relay-control/'
 
 
 def get_current_suntimes(location_city_name):
@@ -24,20 +26,19 @@ def get_current_suntimes(location_city_name):
     return city.sun(date=datetime.today(), local=True)
 
 
-
+if __name__ == '__main__':
+    # Calculate begin and endtime
     suninfo = get_current_suntimes(LOCATION_CITY_NAME)
     time_location_name = timezone('%s/%s' % (LOCATION_REGION, LOCATION_CITY_NAME))
     now = datetime.now(time_location_name)
+    begintime = suninfo['dusk'] + timedelta(minutes=SUN_DUSK_OFFSET_MINUTES)
     endtime = now.replace(hour=23, minute=30)
 
-    if (suninfo['dusk'] + timedelta(minutes=SUN_DUSK_OFFSET_MINUTES)) < now < endtime:
-
-
-cron = CronTab(user='lennart')
-
-iter = cron.find_command('echo')
-
-for job in iter:
-    print(job)
-
-
+    # Update crontab
+    cron = CronTab(user=CRON_USER)
+    cron.remove_all(command='relay_control')
+    job_sr_on = cron.new(command='/usr/bin/python %s/relay_control.py 1 on' % CURRENT_DIR)
+    job_sr_off = cron.new(command='/usr/bin/python %s/relay_control.py 1 off' % CURRENT_DIR)
+    job_sr_on.setall(begintime)
+    job_sr_off.setall(endtime)
+    cron.write()
