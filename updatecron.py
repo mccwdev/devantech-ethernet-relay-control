@@ -39,6 +39,6 @@ if __name__ == '__main__':
     cron.remove_all(command='relay_control')
     job_sr_on = cron.new(command='/usr/bin/python %s/relay_control.py 1 on' % CURRENT_DIR)
     job_sr_off = cron.new(command='/usr/bin/python %s/relay_control.py 1 off' % CURRENT_DIR)
-    job_sr_on.setall(begintime)
-    job_sr_off.setall(endtime)
+    job_sr_on.setall(begintime.time())
+    job_sr_off.setall(endtime.time())
     cron.write()
