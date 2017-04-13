@@ -16,12 +16,7 @@ except:
 from pytz import timezone
 from astral import Astral
 
-
-LOCATION_CITY_NAME = 'Amsterdam'
-LOCATION_REGION = 'Europe'
-SUN_DUSK_OFFSET_MINUTES = -10
-CRON_USER = 'lennart'
-CURRENT_DIR = os.path.join(os.path.expanduser("~"), 'devantech-ethernet-relay-control')
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def get_current_suntimes(location_city_name):
@@ -33,7 +28,10 @@ def get_current_suntimes(location_city_name):
 
 def parse_config(file):
     config = configparser.ConfigParser()
-    config.read_file(file)
+    try:
+        config.read_file(file)
+    except:
+        config.readfp(file)
     return config
 
 

@@ -1,7 +1,7 @@
 [settings]
 locationcity=Amsterdam
 locationregion=Europe
-cronuser=lennart
+cronuser=root
 sunduskoffsetminutes=-10
 endtimehour=23
 endtimeminute=30
