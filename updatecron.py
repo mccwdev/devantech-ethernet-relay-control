@@ -50,8 +50,10 @@ if __name__ == '__main__':
     # Update crontab
     cron = CronTab(user=settings['cronuser'])
     cron.remove_all(command='relay_control')
-    job_sr_on = cron.new(command='/usr/bin/python %s/relay_control.py 1 on' % CURRENT_DIR)
-    job_sr_off = cron.new(command='/usr/bin/python %s/relay_control.py 1 off' % CURRENT_DIR)
+    job_sr_on = cron.new(command='/usr/bin/python %s/relay_control.py 1 on --host %s --port %s' %
+                                 (CURRENT_DIR, settings['erhost'], settings['erport']))
+    job_sr_off = cron.new(command='/usr/bin/python %s/relay_control.py 1 off --host %s --port %s' %
+                                  (CURRENT_DIR, settings['erhost'], settings['erport']))
     job_sr_on.setall(begintime.time())
     job_sr_off.setall(endtime.time())
     cron.write()
