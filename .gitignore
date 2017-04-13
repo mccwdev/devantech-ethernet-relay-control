@@ -91,3 +91,6 @@ ENV/
 # pycharm
 .idea
 
+# Local
+.ini
+
