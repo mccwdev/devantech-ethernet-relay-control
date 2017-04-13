@@ -5,5 +5,5 @@ cronuser=root
 sunduskoffsetminutes=-10
 endtimehour=23
 endtimeminute=30
-erhost = 'ds1242'
-erport = 17123
+erhost=ds1242
+erport=17123
