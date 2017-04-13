@@ -93,3 +93,5 @@ ENV/
 
 # Local
 .ini
+config.ini
+*.ini
