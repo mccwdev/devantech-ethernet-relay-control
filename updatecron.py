@@ -7,6 +7,7 @@
 #
 
 import os
+import sys
 from crontab import CronTab
 from datetime import datetime, timedelta
 try:
@@ -17,6 +18,7 @@ from pytz import timezone
 from astral import Astral
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PYTHON_EXECUTABLE = sys.executable
 
 
 def get_current_suntimes(location_city_name):
@@ -50,10 +52,10 @@ if __name__ == '__main__':
     # Update crontab
     cron = CronTab(user=settings['cronuser'])
     cron.remove_all(command='relay_control')
-    job_sr_on = cron.new(command='/usr/bin/python %s/relay_control.py 1 on --host %s --port %s' %
-                                 (CURRENT_DIR, settings['erhost'], settings['erport']))
-    job_sr_off = cron.new(command='/usr/bin/python %s/relay_control.py 1 off --host %s --port %s' %
-                                  (CURRENT_DIR, settings['erhost'], settings['erport']))
+    job_sr_on = cron.new(command='%s %s/relay_control.py 1 on --host %s --port %s' %
+                                 (PYTHON_EXECUTABLE, CURRENT_DIR, settings['erhost'], settings['erport']))
+    job_sr_off = cron.new(command='%s %s/relay_control.py 1 off --host %s --port %s' %
+                                  (PYTHON_EXECUTABLE, CURRENT_DIR, settings['erhost'], settings['erport']))
     job_sr_on.setall(begintime.time())
     job_sr_off.setall(endtime.time())
     cron.write()
