@@ -16,7 +16,7 @@ ERCONTROL_COMMAND = 'SR'
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Create Bulk Paper Wallets')
+    parser = argparse.ArgumentParser(description='Control Devantech Ethernet Relays')
     parser.add_argument('relay_id', type=int, help='ID number of relay')
     parser.add_argument('command', type=str, help="Command: 'on' or 'off'")
     parser.add_argument('--host', default=ERCONTROL_HOST,

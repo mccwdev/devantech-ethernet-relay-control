@@ -39,7 +39,7 @@ def parse_config(file):
 
 if __name__ == '__main__':
     # Get config settings
-    config = parse_config(open('config.ini'))
+    config = parse_config(open(os.path.join(CURRENT_DIR, 'config.ini')))
     settings = dict(config.items('settings'))
 
     # Calculate begin and endtime
