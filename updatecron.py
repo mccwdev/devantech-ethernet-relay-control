@@ -8,6 +8,7 @@
 
 import os
 import sys
+import argparse
 from crontab import CronTab
 from datetime import datetime, timedelta
 try:
@@ -37,9 +38,18 @@ def parse_config(file):
     return config
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Control Devantech Ethernet Relays - Cron updater')
+    parser.add_argument('--config', default='config.ini',
+                        help="Name of config file to use")
+    return parser.parse_args()
+
+
 if __name__ == '__main__':
+    args = parse_args()
+
     # Get config settings
-    config = parse_config(open(os.path.join(CURRENT_DIR, 'config.ini')))
+    config = parse_config(open(os.path.join(CURRENT_DIR, args.config)))
     settings = dict(config.items('settings'))
 
     # Calculate begin and endtime
