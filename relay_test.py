@@ -29,6 +29,6 @@ if __name__ == '__main__':
     s = MySocket()
     s.connect(ERCONTROL_HOST, ERCONTROL_PORT)
 
-    s.sock.send(b'\x10')
+    s.sock.send(b'\x20\x02\x00')
     data = s.sock.recv(BUFFER_SIZE)
     print(data)

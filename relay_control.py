@@ -38,6 +38,15 @@ class MySocket:
     def connect(self, host, port):
         self.sock.connect((host, port))
 
+    def check_type(self):
+        self.sock.send(b'\x10')
+        res = s.sock.recv(BUFFER_SIZE)
+        if res[0] != '\x12':
+            print("Wrong module type found")
+            return False
+        else:
+            return True
+
 
 if __name__ == '__main__':
     # Parse argument and create command for Ethernet relay
@@ -48,6 +57,7 @@ if __name__ == '__main__':
     # Connect to device and send command
     s = MySocket()
     s.connect(args.host, args.port)
-    s.sock.send(command.encode())
-    data = s.sock.recv(BUFFER_SIZE)
-    print("Response: %s" % data.strip().decode('utf8'))
+    if not s.check_type():
+        s.sock.send(command.encode())
+        data = s.sock.recv(BUFFER_SIZE)
+        print("Response: %s" % data.strip().decode('utf8'))
