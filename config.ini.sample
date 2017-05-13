@@ -7,3 +7,4 @@ endtimehour=23
 endtimeminute=30
 erhost=ds1242
 erport=17123
+relay-id=1
