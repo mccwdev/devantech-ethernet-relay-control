@@ -62,7 +62,8 @@ if __name__ == '__main__':
     # Update crontab
     cron = CronTab(user=settings['cronuser'])
     commentstr = ' relay %s on %s:%s' % (settings['relay-id'], settings['erhost'], settings['erport'])
-    cron.remove_all(comment=commentstr)
+    cron.remove_all(comment='Enable %s' % commentstr)
+    cron.remove_all(comment='Disable %s' % commentstr)
     job_sr_on = cron.new(command='%s %s/relay_control.py %s on --host %s --port %s' %
                                  (PYTHON_EXECUTABLE, CURRENT_DIR, settings['relay-id'],
                                   settings['erhost'], settings['erport']),
